@@ -17,7 +17,7 @@ with open(conf_path, "w") as conf:
 
 print("config is ready")
 
-# Start the Komodo node in regtest mode
+# Start Komodod node in regtest mode
 start_args = [
     "./komodod",
     f"-ac_name={ac_name}",
@@ -32,7 +32,6 @@ start_args = [
     "-testnode=1",
     "-ac_sapling=1",
     "-whitelist=127.0.0.1",
-    # "-regtest",
     "-daemon",
 ]
 
@@ -47,7 +46,7 @@ rpc = Proxy(f"http://test:test@127.0.0.1:{rpc_port}")
 while True:
     try:
         getinfo_output = rpc.getinfo()
-        print(f"✅ Node ready: {getinfo_output}")
+        print(f"Node ready: {getinfo_output}")
         break
     except Exception as e:
         print(f"⏳ Waiting for node to start RPC... {e}")
@@ -83,7 +82,6 @@ start_args = [
     "-testnode=1",
     "-ac_sapling=1",
     "-whitelist=127.0.0.1",
-    # "-regtest",
     f"-pubkey={pubkey}",
     "-daemon",
 ]
@@ -93,7 +91,6 @@ time.sleep(5)
 z_addr = rpc.z_getnewaddress("sapling")
 print("z_newaddress " + z_addr)
 
-# Start mining in regtest mode
 print("Starting mining on regtest node")
 rpc.setgenerate(True, 1)
 
