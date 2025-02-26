@@ -1,2 +1,2 @@
-# ZOMBIE_regtest_docker
+# ZOMBIE_test_docker
 ### TODO

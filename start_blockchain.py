@@ -3,11 +3,10 @@ import time
 import subprocess
 from slickrpc import Proxy
 
-# Initialize parameters from environment variables
 rpc_port = int(os.environ.get("COIN_RPC_PORT", 7000))
 ac_name = "ZOMBIE"
 
-# Set up the single node directory and configuration
+# Set up regular node directory and configuration
 node_dir = "/data/node_0"
 os.makedirs(node_dir, exist_ok=True)
 conf_path = f"{node_dir}/{ac_name}.conf"
@@ -17,7 +16,7 @@ with open(conf_path, "w") as conf:
 
 print("config is ready")
 
-# Start Komodod node in regtest mode
+# Start Komodod node in regular mode
 start_args = [
     "./komodod",
     f"-ac_name={ac_name}",
@@ -36,7 +35,7 @@ start_args = [
 ]
 
 subprocess.call(start_args)
-print("Started node in regtest mode")
+print("Started node in regular mode")
 time.sleep(5)
 
 # Set up RPC connection
@@ -88,10 +87,12 @@ start_args = [
 subprocess.call(start_args)
 time.sleep(5)
 
+# Maybe remove this call(not really needed)
 z_addr = rpc.z_getnewaddress("sapling")
 print("z_newaddress " + z_addr)
 
-print("Starting mining on regtest node")
+print("Starting mining on regular node")
+
 rpc.setgenerate(True, 1)
 
 while True:
