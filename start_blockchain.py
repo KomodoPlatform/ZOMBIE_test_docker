@@ -20,16 +20,19 @@ print("config is ready")
 start_args = [
     "./komodod",
     f"-ac_name={ac_name}",
-    f"-conf={conf_path}",
-    f"-rpcport={rpc_port}",
-    "-port=6000",
-    f"-datadir={node_dir}",
+    "-ac_cc=2",
+    "-ac_sapling=1",
     "-ac_supply=0",
     "-ac_reward=25600000000",
     "-ac_halving=388885",
     "-ac_private=1",
+    "-ac_cbmaturity=1",
+    "-ac_blocktime=10",
+    f"-conf={conf_path}",
+    f"-rpcport={rpc_port}",
+    "-port=6000",
+    f"-datadir={node_dir}",
     "-testnode=1",
-    "-ac_sapling=1",
     "-whitelist=127.0.0.1",
     "-daemon",
 ]
@@ -62,7 +65,6 @@ if not pubkey:
 print("Retrieved pubkey:", pubkey)
 
 print("Stopping the current node...")
-# subprocess.call(["./komodo-cli", f"-ac_name={ac_name}", "stop"])
 response = rpc.stop()
 print("Zombie chain stopped " + response)
 time.sleep(10)
@@ -70,17 +72,20 @@ time.sleep(10)
 start_args = [
     "./komodod",
     f"-ac_name={ac_name}",
-    f"-conf={conf_path}",
-    f"-rpcport={rpc_port}",
-    "-port=6000",
-    f"-datadir={node_dir}",
+    "-ac_cc=2",
     "-ac_supply=0",
     "-ac_reward=25600000000",
     "-ac_halving=388885",
+    "-ac_cbmaturity=1",
+    "-ac_blocktime=10",
     "-ac_private=1",
     "-testnode=1",
     "-ac_sapling=1",
     "-whitelist=127.0.0.1",
+    f"-conf={conf_path}",
+    f"-rpcport={rpc_port}",
+    "-port=6000",
+    f"-datadir={node_dir}",
     f"-pubkey={pubkey}",
     "-daemon",
 ]
