@@ -54,16 +54,17 @@ while True:
         print(f"⏳ Waiting for node to start RPC... {e}")
         time.sleep(2)
 
-new_address = rpc.getnewaddress()
-print("New address:", new_address)
-
-# Retrieve the public key using validateaddress via RPC
-address_info = rpc.validateaddress(new_address)
+# Create a keypair.
+new_z_address = rpc.getnewaddress()
+print("New address:", new_z_address)
+# Retrieve the public key.
+address_info = rpc.validateaddress(new_z_address)
 pubkey = address_info.get("pubkey")
 if not pubkey:
     raise Exception("Public key not found in validateaddress output")
 print("Retrieved pubkey:", pubkey)
 
+# Restart chain with pubkey.
 print("Stopping the current node...")
 response = rpc.stop()
 print("Zombie chain stopped " + response)
@@ -92,19 +93,25 @@ start_args = [
 subprocess.call(start_args)
 time.sleep(5)
 
-# Maybe remove this call(not really needed)
-z_addr = rpc.z_getnewaddress("sapling")
-print("z_newaddress " + z_addr)
+shielded_addr = "zs10hvyxf3ajm82e4gvxem3zjlf9xf3yxhjww9fvz3mfqza9zwumvluzy735e29c3x5aj2nu0ua6n0"
+rpc.z_validateaddress(shielded_addr)
 
+# Start block creationg.
 print("Starting mining on regular node")
-
 rpc.setgenerate(True, 1)
-
 while True:
     try:
+        available_funds = rpc.getbalance()
+        print(f"Available balance: {available_funds}")
+        # Only attempt to shield if funds are available
+        if available_funds > 0:
+            result = rpc.z_shieldcoinbase("*", shielded_addr)
+            print(f"Shielding transaction result: {result}")
+        else:
+            print("No funds available to shield yet.")
         info = rpc.getinfo()
         print(f"Block height: {info['blocks']}, Connections: {info['connections']}")
-        time.sleep(60)
+        time.sleep(5)
     except Exception as e:
         print(f"Error: {e}")
         break
